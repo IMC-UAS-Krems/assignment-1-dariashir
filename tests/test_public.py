@@ -142,7 +142,7 @@ class TestTrackMostDistinctListeners:
     # TODO: Add a test that verifies the correct track is returned.
     #       Count listeners per track from the fixture data.
 
-class TestTrackMostDistinctListeners:
+
     def test_correct_track(self, platform: StreamingPlatform) -> None:
         user_1=platform.get_user("u1")
         user_2=platform.get_user("u2")
