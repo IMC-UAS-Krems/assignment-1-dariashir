@@ -377,8 +377,8 @@ class TestUserTopGenre:
         top_genre=result[0]
         percentage=result[1]
         expected_percentage = (390 / 490) * 100
-        assert top_genre == "pop"
-        assert percentage == expected_percentage
+        assert top_genre=="pop"
+        assert percentage==expected_percentage
 
 
 # ===========================================================================
@@ -434,7 +434,7 @@ class TestCollaborativePlaylistsManyArtists:
         playlist1.add_track(track1)
         playlist1.add_track(track2)
         playlist1.add_track(track3)
-        playlist2 = CollaborativePlaylist("p2","Small Mix",owner)
+        playlist2=CollaborativePlaylist("p2","Small Mix",owner)
         playlist2.add_track(platform.get_track("t1"))
         playlist2.add_track(track1)
         platform.add_playlist(playlist1)
@@ -469,12 +469,12 @@ class TestAvgTracksPerPlaylistType:
 
     # TODO: Add tests that verify the correct averages for each playlist type.
     def test_standard_playlist_average(self, platform: StreamingPlatform) -> None:
-        owner = platform.get_user("u1")
-        p1 = Playlist("p1", "name_1", owner)
-        p2 = Playlist("p2", "name_2", owner)
-        track1 = platform.get_track("t1")
-        track2 = platform.get_track("t2")
-        track3 = platform.get_track("t3")
+        owner=platform.get_user("u1")
+        p1=Playlist("p1","name_1",owner)
+        p2=Playlist("p2","name_2",owner)
+        track1=platform.get_track("t1")
+        track2=platform.get_track("t2")
+        track3=platform.get_track("t3")
         p1.add_track(track1)
         p1.add_track(track2)
         p2.add_track(track1)
@@ -482,8 +482,8 @@ class TestAvgTracksPerPlaylistType:
         p2.add_track(track3)
         platform.add_playlist(p1)
         platform.add_playlist(p2)
-        result = platform.avg_tracks_per_playlist_type()
-        assert result["Playlist"] == 2.5
+        result=platform.avg_tracks_per_playlist_type()
+        assert result["Playlist"]==2.5
 
     def test_collaborative_playlist_average(self, platform: StreamingPlatform) -> None:
         owner=platform.get_user("u1")
@@ -545,9 +545,9 @@ class TestUsersWhoCompletedAlbums:
         platform.record_session(ListeningSession("s3",user_1,track3,RECENT,195))
         platform.record_session(ListeningSession("s4",user_2,track1,RECENT,180))
         platform.record_session(ListeningSession("s5",user_2,track2,RECENT,210))
-        result = platform.users_who_completed_albums()
-        user_ids = []
-        for user, albums in result:
+        result=platform.users_who_completed_albums()
+        user_ids=[]
+        for user,albums in result:
             user_ids.append(user.user_id)
         assert "u2" in user_ids
         assert "u1" not in user_ids
@@ -562,5 +562,5 @@ class TestUsersWhoCompletedAlbums:
         platform.record_session(ListeningSession("s2",user,t2,RECENT,210))
         platform.record_session(ListeningSession("s3",user,t3,RECENT,195))
         result=platform.users_who_completed_albums()
-        assert result[0][0].user_id == "u2"
+        assert result[0][0].user_id=="u2"
         assert result[0][1]==["Digital Dreams"]
