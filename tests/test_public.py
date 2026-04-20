@@ -28,6 +28,7 @@ from streaming.sessions import ListeningSession
 from streaming.artists import Artist
 from streaming.tracks import SingleRelease
 from datetime import date
+from streaming.playlists import Playlist
 
 
 # ===========================================================================
@@ -468,13 +469,38 @@ class TestAvgTracksPerPlaylistType:
 
     # TODO: Add tests that verify the correct averages for each playlist type.
     def test_standard_playlist_average(self, platform: StreamingPlatform) -> None:
-        pass
+        owner = platform.get_user("u1")
+        p1 = Playlist("p1", "name_1", owner)
+        p2 = Playlist("p2", "name_2", owner)
+        track1 = platform.get_track("t1")
+        track2 = platform.get_track("t2")
+        track3 = platform.get_track("t3")
+        p1.add_track(track1)
+        p1.add_track(track2)
+        p2.add_track(track1)
+        p2.add_track(track2)
+        p2.add_track(track3)
+        platform.add_playlist(p1)
+        platform.add_playlist(p2)
+        result = platform.avg_tracks_per_playlist_type()
+        assert result["Playlist"] == 2.5
 
-    def test_collaborative_playlist_average(
-        self, platform: StreamingPlatform
-    ) -> None:
-        pass
-
+    def test_collaborative_playlist_average(self, platform: StreamingPlatform) -> None:
+        owner=platform.get_user("u1")
+        track1=platform.get_track("t1")
+        track2=platform.get_track("t2")
+        track3=platform.get_track("t3")
+        playlist1=CollaborativePlaylist("p3","name_1",owner)
+        playlist2=CollaborativePlaylist("p4","name_2",owner)
+        playlist1.add_track(track1)
+        playlist2.add_track(track1)
+        playlist2.add_track(track2)
+        playlist2.add_track(track3)
+        platform.add_playlist(playlist1)
+        platform.add_playlist(playlist2)
+        result=platform.avg_tracks_per_playlist_type()
+        average=result["CollaborativePlaylist"]
+        assert average==2.0
 
 # ===========================================================================
 # Q10 - Users who completed at least one full album
@@ -509,7 +535,32 @@ class TestUsersWhoCompletedAlbums:
 
     # TODO: Add tests that verify the correct users and albums are identified.
     def test_correct_users_identified(self, platform: StreamingPlatform) -> None:
-        pass
+        user_2=platform.get_user("u1")
+        user_1=platform.get_user("u2")
+        track1=platform.get_track("t1")
+        track2=platform.get_track("t2")
+        track3=platform.get_track("t3")
+        platform.record_session(ListeningSession("s1",user_1,track1,RECENT,180))
+        platform.record_session(ListeningSession("s2",user_1,track2,RECENT,210))
+        platform.record_session(ListeningSession("s3",user_1,track3,RECENT,195))
+        platform.record_session(ListeningSession("s4",user_2,track1,RECENT,180))
+        platform.record_session(ListeningSession("s5",user_2,track2,RECENT,210))
+        result = platform.users_who_completed_albums()
+        user_ids = []
+        for user, albums in result:
+            user_ids.append(user.user_id)
+        assert "u2" in user_ids
+        assert "u1" not in user_ids
 
     def test_correct_album_titles(self, platform: StreamingPlatform) -> None:
-        pass
+        from streaming.sessions import ListeningSession
+        user=platform.get_user("u2")
+        t1=platform.get_track("t1")
+        t2=platform.get_track("t2")
+        t3=platform.get_track("t3")
+        platform.record_session(ListeningSession("s1",user,t1,RECENT,180))
+        platform.record_session(ListeningSession("s2",user,t2,RECENT,210))
+        platform.record_session(ListeningSession("s3",user,t3,RECENT,195))
+        result=platform.users_who_completed_albums()
+        assert result[0][0].user_id == "u2"
+        assert result[0][1]==["Digital Dreams"]
