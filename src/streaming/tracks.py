@@ -17,6 +17,7 @@ from datetime import date
 from abc import ABC
 
 class Track(ABC):
+    #abstract class and storing basic tracks  info
     def __init__(self, track_id: str, title: str, duration_seconds: int, genre: str):
         self.track_id = track_id
         self.title = title
@@ -24,27 +25,33 @@ class Track(ABC):
         self.genre = genre
 
     def duration_minutes(self):
+        #converting seconds to minutes
         return self.duration_seconds / 60
 
     def __eq__(self, other):
+        #2 tracks are equal if they have the same id
         if type(other) != Track:
             return False
         return self.track_id == other.track_id
 
 class Song(Track):
     def __init__(self, track_id: str, title: str, duration_seconds: int, genre: str, artist):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre)
         self.artist = artist
 
 class SingleRelease(Song):
     def __init__(self,track_id: str,title: str,duration_seconds: int,genre: str,artist,release_date: date):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre, artist)
         self.release_date = release_date
 
 class AlbumTrack(Song):
     def __init__(self,track_id: str,title: str,duration_seconds: int,genre: str,artist,track_number: int):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre, artist)
         self.track_number = track_number
+        #album will be added later
         self.album = None
 
 class Podcast(Track):
@@ -55,17 +62,20 @@ class Podcast(Track):
 
 class InterviewEpisode(Podcast):
     def __init__(self,track_id: str,title: str,duration_seconds: int,genre: str,host: str,guest: str,description: str = ""):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre, host, description)
         self.guest = guest
 
 class NarrativeEpisode(Podcast):
     def __init__(self,track_id: str,title: str,duration_seconds: int,genre: str,host: str,season: int,episode_number: int,description: str = ""):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre, host, description)
         self.season = season
         self.episode_number = episode_number
 
 class AudiobookTrack(Track):
     def __init__(self,track_id: str,title: str,duration_seconds: int,genre: str,author: str,narrator: str):
+        # inheriting fields from the parent class
         super().__init__(track_id, title, duration_seconds, genre)
         self.author = author
         self.narrator = narrator
